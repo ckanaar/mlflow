@@ -8,6 +8,7 @@ from mlflow.entities import (
     DatasetInput,
     DatasetRecord,
     Issue,
+    IssueStatus,
     LoggedModel,
     LoggedModelInput,
     LoggedModelOutput,
@@ -606,7 +607,7 @@ class AbstractStore(GatewayStoreMixin):
         experiment_id: str,
         name: str,
         description: str,
-        status: str,
+        status: IssueStatus = IssueStatus.PENDING,
         confidence: str | None = None,
         root_causes: list[str] | None = None,
         source_run_id: str | None = None,
@@ -619,7 +620,7 @@ class AbstractStore(GatewayStoreMixin):
             experiment_id: The experiment ID.
             name: Short descriptive name for the issue.
             description: Detailed description of the issue.
-            status: Issue status.
+            status: Issue status. Defaults to IssueStatus.PENDING.
             confidence: Optional confidence level indicator.
             root_causes: Optional list of root cause analyses.
             source_run_id: Optional MLflow run ID that discovered this issue.
@@ -645,7 +646,7 @@ class AbstractStore(GatewayStoreMixin):
     def update_issue(
         self,
         issue_id: str,
-        status: str | None = None,
+        status: IssueStatus | None = None,
         name: str | None = None,
         description: str | None = None,
         confidence: str | None = None,

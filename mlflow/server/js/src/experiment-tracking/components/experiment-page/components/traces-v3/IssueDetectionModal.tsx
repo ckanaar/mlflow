@@ -130,9 +130,9 @@ export const IssueDetectionModal: React.FC<IssueDetectionModalProps> = ({
       }
 
       // TODO: Implement backend API call for issue detection
-      onSubmitSuccess?.();
       resetForm();
       onClose();
+      onSubmitSuccess?.();
     } finally {
       setIsSubmitting(false);
     }

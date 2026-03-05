@@ -233,8 +233,10 @@ def test_back_compat():
         "name": "name",
         "unknown": "field",
         "experiment_ids": [1, 2, 3, 4, 5],
+        "model_id": 456,
         "things": {
             "experiment_id": 4,
+            "model_id": 789,
             "more_things": {"experiment_id": 7, "experiment_ids": [2, 3, 4, 5]},
         },
     }
@@ -245,12 +247,30 @@ def test_back_compat():
         "name": "name",
         "unknown": "field",
         "experiment_ids": ["1", "2", "3", "4", "5"],
+        "model_id": "456",
         "things": {
             "experiment_id": "4",
+            "model_id": "789",
             "more_things": {"experiment_id": "7", "experiment_ids": ["2", "3", "4", "5"]},
         },
     }
     assert exp_json == in_json
+
+
+def test_parse_dict_with_integer_model_id():
+    from mlflow.protos.model_registry_pb2 import ModelVersion as ProtoModelVersion
+
+    response_dict = {
+        "name": "test-model",
+        "version": "1",
+        "model_id": 123,
+    }
+
+    model_version = ProtoModelVersion()
+    parse_dict(response_dict, model_version)
+    assert model_version.model_id == "123"
+    assert model_version.name == "test-model"
+    assert model_version.version == "1"
 
 
 def assert_result(result, expected_result):

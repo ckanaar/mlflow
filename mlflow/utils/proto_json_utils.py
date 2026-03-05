@@ -166,20 +166,15 @@ def milliseconds_to_proto_duration(milliseconds: int) -> str:
 
 
 def _stringify_all_experiment_ids(x):
-    """Converts experiment_id fields which are defined as ints into strings in the given json.
-    This is necessary for backwards- and forwards-compatibility with MLflow clients/servers
-    running MLflow 0.9.0 and below, as experiment_id was changed from an int to a string.
-    To note, the Python JSON serializer is happy to auto-convert strings into ints (so a
-    server or client that sees the new format is fine), but is unwilling to convert ints
-    to strings. Therefore, we need to manually perform this conversion.
-
-    This code can be removed after MLflow 1.0, after users have given reasonable time to
-    upgrade clients and servers to MLflow 0.9.1+.
+    """Converts experiment_id and model_id fields which are defined as ints into strings in
+    the given json. The Python JSON serializer is happy to auto-convert strings into ints
+    (so a server or client that sees the new format is fine), but is unwilling to convert
+    ints to strings. Therefore, we need to manually perform this conversion.
     """
     if isinstance(x, dict):
         items = x.items()
         for k, v in items:
-            if k == "experiment_id":
+            if k in ("experiment_id", "model_id"):
                 x[k] = str(v)
             elif k == "experiment_ids":
                 x[k] = [str(w) for w in v]
